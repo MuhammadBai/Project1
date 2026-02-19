@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Enter Data</title></head>
+<body>
+  <h2>Enter Data</h2>
+
+  <form method="POST" action="/submit">
+    <div>
+      <label>Username:</label>
+      <input name="username" />
+    </div>
+    <div>
+      <label>Password:</label>
+      <input name="password" type="password" />
+    </div>
+    <div>
+      <label>Value (number):</label>
+      <input name="value" />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p style="color:green;"><%= success %></p>
+  <p style="color:red;"><%= error %></p>
+</body>
+</html>

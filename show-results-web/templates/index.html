@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Show Results</title></head>
+<body>
+  <h2>Show Results</h2>
+
+  <form method="POST" action="/results">
+    <div><label>Username:</label> <input name="username"></div>
+    <div><label>Password:</label> <input name="password" type="password"></div>
+    <button type="submit">View Results</button>
+  </form>
+
+  <p style="color:red;">{{ error }}</p>
+</body>
+</html>

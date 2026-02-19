@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+  auth-service:
+    build: ./auth-service
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DB: datadb
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+
+  enter-data-web:
+    build: ./enter-data-web
+    environment:
+      AUTH_URL: http://auth-service:3000/auth
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DB: datadb
+    depends_on:
+      - auth-service
+      - mysql
+    ports:
+      - "4000:4000"
+
+  analytics-service:
+    build: ./analytics-service
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpass
+      MYSQL_DB: datadb
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DB: analyticsdb
+    depends_on:
+      - mysql
+      - mongo
+    ports:
+      - "5000:5000"
+
+  show-results-web:
+    build: ./show-results-web
+    environment:
+      AUTH_URL: http://auth-service:3000/auth
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DB: analyticsdb
+    depends_on:
+      - auth-service
+      - mongo
+    ports:
+      - "7000:6000"
